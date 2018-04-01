@@ -5,8 +5,9 @@ header {
 input,
 button {
   width:100%;
+  display:block;
   height:30px;
-  margin:7px;
+  margin:10px auto 10px auto;
 }
 
 body {
@@ -29,7 +30,8 @@ main {
 
 h1 {
   font-size:30px;
-  margin:15px;
+  margin:12px;
+  margin-bottom:20px;
   font-family: Roboto Slab;
   font-weight: 700;
   color:#6D6E71;
@@ -40,7 +42,6 @@ span {
   color:#00A79D;
 }
 
-
 #save-button {
   background-color:#00A798;
   color: white;
@@ -49,3 +50,70 @@ span {
 #save-button:hover {
   background-color: #045E55;
 }
+
+#search-box {
+  margin: 10px 0 20px 0;
+}
+
+hr {
+  margin:10px auto 20px auto;
+}
+
+/* card styles */
+
+/*.idea-card {
+  border-bottom: 2px solid gray;
+}*/
+
+h2 {
+  display:inline-block;
+  font-family: Roboto Slab;
+  font-size:22px;
+  font-weight:bold;
+  margin-bottom:8px;
+}
+
+button {
+  margin: 2px 12px 0 0;
+  height:20px;
+  width:20px;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 2px 7px 6px 6px;
+  border-radius: 50%;
+  background-color:gray;
+  color:white;
+  font-size:14px;
+}
+
+.card-body {
+  margin: 6px auto 8px auto;
+}
+
+.vote-container {
+  display: flex;
+  align-items: center;
+  height:50px;
+}
+
+.remove {
+  float:right;
+}
+
+.card-quality {
+  display: inline-block;
+}
+
+.idea-card {
+  margin:15px 0 15px 0;
+}
+
+
+
+
+
+
+
+
