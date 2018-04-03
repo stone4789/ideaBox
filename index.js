@@ -9,8 +9,14 @@ saveButton.addEventListener('click',createNewCard);
 window.addEventListener('load', getStorage);
 
 
-document.querySelector('.upvote').addEventListener('click',updateQuality(1));
-document.querySelector('#idea-space').addEventListener('click',updateQuality(-1));
+//document.querySelector('.upvote').addEventListener('click',updateQuality(1));
+document.querySelector('#idea-space').addEventListener('click',function(e){
+  if (e.target.classList.contains("upvote")) {
+    updateQuality(e.target,1);
+  } else if (e.target.classList.contains("downvote")) {
+    //updateQuality(-1);
+  }
+})
 
 
 
@@ -19,10 +25,12 @@ function store(arr) {
 }
 
 function getStorage(){
-  ideaArray = JSON.parse(localStorage.getItem('data'));
-  ideaArray.forEach(function(obj){
-    renderCard(obj);
-  });
+  if (localStorage.data) {
+    ideaArray = JSON.parse(localStorage.getItem('data'));
+    ideaArray.forEach(function(obj){
+      renderCard(obj);
+    });
+  }
 }
 
 function Card(title,body,id) {
@@ -33,10 +41,8 @@ function Card(title,body,id) {
   this.id = id;
 }
 
-Card.prototype.updateQuality = function(n) {
-
-  event.target 
-  if (this.quality === "swill" && n === 1) {
+Card.prototype.updateQuality = function(element,n) {
+  if (element.quality === "swill" && n === 1) {
     this.quality = "decent";
     this.numQuality = 1;
   } else if (this.quality === "decent" && n === 1) {
@@ -73,7 +79,7 @@ function createNewCard(e) {
   var idNumber = Date.now();
   var cardObject = new Card(idea,body,idNumber);
   ideaArray.push(cardObject);
-  console.log(ideaArray);
+  console.log(idNumber);
   store(ideaArray);
   renderCard(cardObject);
 }
@@ -83,7 +89,7 @@ function renderCard(newCard) {
   var card = document.createElement('li');
   card.innerHTML = 
     '<li id= "n' +
-    newCard.idNumber +
+    newCard.id +
     '" class="idea-card">' +
     '<h2 class="card-title">' + 
       newCard.title + 
