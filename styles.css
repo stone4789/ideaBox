@@ -17,14 +17,14 @@ body {
 }
 
 form {
-  width:50%;
+  width:70%;
   margin:auto;
   padding:10px;
   padding-bottom:15px;
 }
 
 main {
-  width:50%;
+  width:70%;
   margin:auto;
   padding-top:15px;
 }
@@ -59,12 +59,6 @@ span {
 hr {
   margin:10px auto 20px auto;
 }
-
-/* card styles */
-
-/*.idea-card {
-  border-bottom: 2px solid gray;
-}*/
 
 h2 {
   display:inline-block;
@@ -109,10 +103,11 @@ button {
   display: inline-block;
 }
 
-.idea-card {
-  margin:15px 0 15px 0;
+.upVote:hover {
+ background-image: url('images/upvote-hover.svg');
 }
 
+<<<<<<< HEAD
 .upvote {
   background-image: url('images/upvote.svg');
 }
@@ -159,10 +154,36 @@ button {
    }
 }
 
+=======
+.downVote:hover {
+ background-image: url('images/downvote-hover.svg');
+}
+>>>>>>> 229fd4000f87bf3af7ed2844b574321ee5b0fc2b
 
+.remove {
+  background-image: url('images/delete-hover.svg');
+}
 
+.idea-card {
+  margin:15px 0 15px 0;
+}
 
+@media screen and (max-width: 570px){
+  form {
+    width: 90%;
+  }
 
+  main {
+    width: 90%;
+  }
+}
 
+@media screen and (max-width: 350px){
+  form {
+    width: 90%;
+  }
 
-
+main {
+    width: 90%;
+  }
+}
