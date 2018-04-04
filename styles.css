@@ -118,8 +118,6 @@ button {
   main {
     width: 90%;
   }
-
-
 }
 
 @media screen and (max-width: 350px){
@@ -130,7 +128,6 @@ button {
 main {
     width: 90%;
   }
-
 }
 
 
