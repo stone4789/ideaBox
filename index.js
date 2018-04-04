@@ -3,32 +3,38 @@ var bodyInput = document.querySelector('#body');
 var saveButton = document.querySelector('#save-button');
 var searchInput = document.querySelector('#search-box');
 var ideaList = document.querySelector('#idea-space')
-var ideaArray = [];
+var keyArray = [];
 
 saveButton.addEventListener('click',createNewCard);
 window.addEventListener('load', getStorage);
 
-
-//document.querySelector('.upvote').addEventListener('click',updateQuality(1));
 document.querySelector('#idea-space').addEventListener('click',function(e){
+  e.preventDefault();
+  var card = e.target.closest('li');
+  var key = card.id;
+  var object = JSON.parse(localStorage.getItem(key));
   if (e.target.classList.contains("upvote")) {
-    updateQuality(e.target,1);
+    localStorage.setItem(key,JSON.stringify(updateQuality(object,1)));
   } else if (e.target.classList.contains("downvote")) {
-    //updateQuality(-1);
+    localStorage.setItem(key,JSON.stringify(updateQuality(object,-1)));
+  } else if (e.target.classList.contains("remove")) {
+    localStorage.removeItem(key);
+    keyArray.splice(keyArray.indexOf(key),1);
+    localStorage.setItem('keyArray',JSON.stringify(keyArray));
+  } else if (e.target.hasAttribute('contenteditable')) {
+
   }
+  document.querySelector('#idea-space').innerHTML = '';
+  getStorage();
 })
 
-
-
-function store(arr) {
-  localStorage.setItem('data',JSON.stringify(arr));
-}
-
 function getStorage(){
-  if (localStorage.data) {
-    ideaArray = JSON.parse(localStorage.getItem('data'));
-    ideaArray.forEach(function(obj){
-      renderCard(obj);
+  if (localStorage.keyArray) {
+    keyArray = JSON.parse(localStorage.getItem('keyArray'));
+    //sortCards();
+    keyArray.forEach(function(id){
+      var card = JSON.parse(localStorage.getItem(id));
+      renderCard(card);
     });
   }
 }
@@ -41,36 +47,35 @@ function Card(title,body,id) {
   this.id = id;
 }
 
-Card.prototype.updateQuality = function(element,n) {
-  if (element.quality === "swill" && n === 1) {
-    this.quality = "decent";
-    this.numQuality = 1;
-  } else if (this.quality === "decent" && n === 1) {
-    this.quality = "excellent";
-    this.numQuality = 2
-  }else if (this.quality === "excellent" && n === -1) {
-    this.quality = "decent";
-    this.numQuality = 1;
-  }else if (this.quality === "decent" && n === -1) {
-    this.quality = "swill";
-    this.numQuality = 0;
+function updateQuality(obj,n) {
+  if (obj.quality === "swill" && n === 1) {
+    obj.quality = "plausible";
+    obj.numQuality = 1;
+  } else if (obj.quality === "plausible" && n === 1) {
+    obj.quality = "genius";
+    obj.numQuality = 2
+  }else if (obj.quality === "genius" && n === -1) {
+    obj.quality = "plausible";
+    obj.numQuality = 1;
+  }else if (obj.quality === "plausible" && n === -1) {
+    obj.quality = "swill";
+    obj.numQuality = 0;
   }
-  sortCards();
+  return obj;
 }
 
-function sortCards() {
-  ideaArray.sort(function (a,b){
-    if (a.numQuality > b.numQuality) {
-      return 1;
-    } else {
-      return -1;
-    }
-  })
-  ideaArray.forEach(function(obj){
-    renderCard(obj);
-  });
-  store(ideaArray);
-}
+// function sortCards() {
+//   keyArray.sort(function (a,b){
+//     var obj1 = JSON.parse(localStorage.getItem(a));
+//     var obj2 = JSON.parse(localStorage.getItem(b));
+//     if (obj1.numQuality > obj2.numQuality) {
+//       return -1;
+//     } else {
+//       return 1;
+//     }
+//     localStorage.setItem(JSON.stringify(keyArray));
+//   })
+// }
 
 function createNewCard(e) {
   e.preventDefault();
@@ -78,9 +83,11 @@ function createNewCard(e) {
   var body = bodyInput.value;
   var idNumber = Date.now();
   var cardObject = new Card(idea,body,idNumber);
-  ideaArray.push(cardObject);
-  console.log(idNumber);
-  store(ideaArray);
+
+  keyArray.push(idNumber);
+  localStorage.setItem('keyArray',JSON.stringify(keyArray));
+  localStorage.setItem(idNumber,JSON.stringify(cardObject));
+
   renderCard(cardObject);
 }
 
@@ -88,16 +95,16 @@ function renderCard(newCard) {
 
   var card = document.createElement('li');
   card.innerHTML = 
-    '<li id= "n' +
+    '<li id= "'+
     newCard.id +
     '" class="idea-card">' +
-    '<h2 class="card-title">' + 
+    '<h2 class="card-title" contenteditable="">' + 
       newCard.title + 
     '</h2>' +
     '<button class="remove">' + 
       'x' + 
     '</button>' +
-    '<p class="card-body">' + 
+    '<p class="card-body" contenteditable="">' + 
       newCard.body + 
     '</p>' +
     '<div class="vote-container">' +
@@ -114,7 +121,7 @@ function renderCard(newCard) {
     '<hr>'
     '</li>';
 
-  ideaList.appendChild(card);
+  ideaList.insertBefore(card,ideaList.firstChild);
   document.querySelector('form').reset();
 }
 
