@@ -102,31 +102,28 @@ function renderCard(newCard) {
 
   var card = document.createElement('li');
   card.innerHTML = 
-    '<li id= "'+
-    newCard.id +
+    '<li id= "n' +
+    newCard.idNumber +
     '" class="idea-card">' +
-    '<h2 class="card-title" contenteditable="">' + 
+    '<h2 class="card-title">' + 
       newCard.title + 
     '</h2>' +
     '<button class="remove">' + 
       'x' + 
     '</button>' +
-    '<p class="card-body" contenteditable="">' + 
+    '<p class="card-body">' + 
       newCard.body + 
     '</p>' +
     '<div class="vote-container">' +
-      '<button class="upvote">' +
-      '&#8593;' +
-      '</button>' +
-      '<button class="downvote">' +
-      '&#8595;' +
+      '<input class="upVote" type="image" src="images/downvote.svg">' +
+      '<input class="downVote" type="image" src="images/upvote.svg">' +
       '</button>' +
       '<h5 class="card-quality">quality: ' + 
       newCard.quality + 
       '</h5>' +
     '</div>' +
-    '<hr>'
-    '</li>';
+    '<hr>' +
+    '</li>'};
 
   ideaList.insertBefore(card,ideaList.firstChild);
   document.querySelector('form').reset();
