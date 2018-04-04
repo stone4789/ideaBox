@@ -8,32 +8,39 @@ var keyArray = [];
 saveButton.addEventListener('click',createNewCard);
 window.addEventListener('load', getStorage);
 
-document.querySelector('#idea-space').addEventListener('click',function(e){
+document.querySelector('#idea-space').addEventListener('click',handleCardEvents);
+
+
+function handleCardEvents(e){
   e.preventDefault();
   var card = e.target.closest('li');
   var key = card.id;
   var object = JSON.parse(localStorage.getItem(key));
+
   if (e.target.classList.contains("upvote")) {
     localStorage.setItem(key,JSON.stringify(updateQuality(object,1)));
   } else if (e.target.classList.contains("downvote")) {
     localStorage.setItem(key,JSON.stringify(updateQuality(object,-1)));
   } else if (e.target.classList.contains("remove")) {
+    var index = keyArray.indexOf(parseInt(key));
+    keyArray.splice(index,1);
     localStorage.removeItem(key);
-    keyArray.splice(keyArray.indexOf(key),1);
     localStorage.setItem('keyArray',JSON.stringify(keyArray));
   } else if (e.target.hasAttribute('contenteditable')) {
 
   }
   document.querySelector('#idea-space').innerHTML = '';
   getStorage();
-})
+}
 
 function getStorage(){
   if (localStorage.keyArray) {
     keyArray = JSON.parse(localStorage.getItem('keyArray'));
+    console.log(keyArray);
     //sortCards();
     keyArray.forEach(function(id){
       var card = JSON.parse(localStorage.getItem(id));
+      console.log(card)
       renderCard(card);
     });
   }
