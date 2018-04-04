@@ -27,7 +27,7 @@ function handleCardEvents(e){
     localStorage.removeItem(key);
     localStorage.setItem('keyArray',JSON.stringify(keyArray));
   } else if (e.target.hasAttribute('contenteditable')) {
-
+    
   }
   document.querySelector('#idea-space').innerHTML = '';
   getStorage();
@@ -131,18 +131,6 @@ function renderCard(newCard) {
   ideaList.insertBefore(card,ideaList.firstChild);
   document.querySelector('form').reset();
 }
-
-  //addToLocalStorage();
-
-
-
-
-
-
-
-
-
-
 
 
 
