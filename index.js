@@ -2,69 +2,135 @@ var ideaInput = document.querySelector('#title');
 var bodyInput = document.querySelector('#body');
 var saveButton = document.querySelector('#save-button');
 var searchInput = document.querySelector('#search-box');
-var ideaList = document.querySelector('#ideaList');
-saveButton.onclick(createNewCard());
-// Construct New Idea
-function newIdea (title, body, id, quality = 'swill') {
-    this.title = title,
-    this.body = body,
-    this.id = id,
-    this.quality = quality;
+var ideaList = document.querySelector('#idea-space')
+var keyArray = [];
+
+saveButton.addEventListener('click',createNewCard);
+window.addEventListener('load', getStorage);
+
+document.querySelector('#idea-space').addEventListener('click',handleCardEvents);
+
+
+function handleCardEvents(e){
+  e.preventDefault();
+  var card = e.target.closest('li');
+  var key = card.id;
+  var object = JSON.parse(localStorage.getItem(key));
+
+  if (e.target.classList.contains("upvote")) {
+    localStorage.setItem(key,JSON.stringify(updateQuality(object,1)));
+  } else if (e.target.classList.contains("downvote")) {
+    localStorage.setItem(key,JSON.stringify(updateQuality(object,-1)));
+  } else if (e.target.classList.contains("remove")) {
+    var index = keyArray.indexOf(parseInt(key));
+    keyArray.splice(index,1);
+    localStorage.removeItem(key);
+    localStorage.setItem('keyArray',JSON.stringify(keyArray));
+  } else if (e.target.hasAttribute('contenteditable')) {
+    
+  }
+  document.querySelector('#idea-space').innerHTML = '';
+  getStorage();
 }
-// Clear All Inputs
-function clearInputs() {
-    ideaInput.value = '';
-    bodyInput.value = '';
-}
-// Ideas Object
-var Ideas = {
-    allIdeas: [],
-    add: function (title, body) {
-        this.allIdeas.unshift(new Idea(title, body));
-        this.store();
-    },
 
-    store: function() {
-        localStorage.setItem('allIdeas', JSON.stringify(this.allIdeas));
-    },
-
-    retrieve: function() {
-        var ideasFromStorage = localStorage.getItem('allIdeas') || '[]';
-        var ideasAsObjects = JSON.parse(ideasFromStorage);
-        this.allIdeas = ideasAsObjects.map(function(obj) {
-            return new Idea(obj.title, obj.body, obj.id, obj.quality);
-        });
-    },
-
-    render: function() {
-      ideaList.innerHTML('');
-      this.allIdeas.forEach( function (idea) {
-      ideaList.append(
-        '<article class="idea-card" data-id=' + idea.id + '>' +
-          '<h2 class="idea-title" contenteditable="true">' + idea.title + '</h2>' +
-          '<button class="image delete-button"></button>' +
-          '<p class="idea-body" contenteditable="true">' +
-            idea.value +
-          '</p>' +
-          '<div class="quality-container">' +
-            '<button class="image upvote-button"></button>' +
-            '<button class="image downvote-button"></button>' +
-            '<aside class="current-quality"><span>quality: </span>' +
-              idea.quality +
-            '</aside>' +
-          '</div>' +
-        '</article>'
-      );
+function getStorage(){
+  if (localStorage.keyArray) {
+    keyArray = JSON.parse(localStorage.getItem('keyArray'));
+    console.log(keyArray);
+    //sortCards();
+    keyArray.forEach(function(id){
+      var card = JSON.parse(localStorage.getItem(id));
+      console.log(card)
+      renderCard(card);
     });
-  },
+  }
+}
 
-// JSON storage
+function Card(title,body,id) {
+  this.title = title;
+  this.body = body;
+  this.quality = "swill";
+  this.numQuality = 0;
+  this.id = id;
+}
+
+function updateQuality(obj,n) {
+  if (obj.quality === "swill" && n === 1) {
+    obj.quality = "plausible";
+    obj.numQuality = 1;
+  } else if (obj.quality === "plausible" && n === 1) {
+    obj.quality = "genius";
+    obj.numQuality = 2
+  }else if (obj.quality === "genius" && n === -1) {
+    obj.quality = "plausible";
+    obj.numQuality = 1;
+  }else if (obj.quality === "plausible" && n === -1) {
+    obj.quality = "swill";
+    obj.numQuality = 0;
+  }
+  return obj;
+}
+
+// function sortCards() {
+//   keyArray.sort(function (a,b){
+//     var obj1 = JSON.parse(localStorage.getItem(a));
+//     var obj2 = JSON.parse(localStorage.getItem(b));
+//     if (obj1.numQuality > obj2.numQuality) {
+//       return -1;
+//     } else {
+//       return 1;
+//     }
+//     localStorage.setItem(JSON.stringify(keyArray));
+//   })
+// }
+
+function createNewCard(e) {
+  e.preventDefault();
+  var idea = ideaInput.value;
+  var body = bodyInput.value;
+  var idNumber = Date.now();
+  var cardObject = new Card(idea,body,idNumber);
+
+  keyArray.push(idNumber);
+  localStorage.setItem('keyArray',JSON.stringify(keyArray));
+  localStorage.setItem(idNumber,JSON.stringify(cardObject));
+
+  renderCard(cardObject);
+}
+
+function renderCard(newCard) {
+
+  var card = document.createElement('li');
+  card.innerHTML = 
+    '<li id= "'+
+    newCard.id +
+    '" class="idea-card">' +
+    '<h2 class="card-title" contenteditable="">' + 
+      newCard.title + 
+    '</h2>' +
+    '<button class="remove">' + 
+      'x' + 
+    '</button>' +
+    '<p class="card-body" contenteditable="">' + 
+      newCard.body + 
+    '</p>' +
+    '<div class="vote-container">' +
+      '<button class="upvote">' +
+      '&#8593;' +
+      '</button>' +
+      '<button class="downvote">' +
+      '&#8595;' +
+      '</button>' +
+      '<h5 class="card-quality">quality: ' + 
+      newCard.quality + 
+      '</h5>' +
+    '</div>' +
+    '<hr>'
+    '</li>';
+
+  ideaList.insertBefore(card,ideaList.firstChild);
+  document.querySelector('form').reset();
+}
 
 
 
-
-// Idea Search
-// Upvote
-//Downvote
-
-// Editing or deleting title or body
