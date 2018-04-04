@@ -12,12 +12,13 @@ document.querySelector('#idea-space').addEventListener('click',handleCardEvents)
 
 
 function handleCardEvents(e){
-  e.preventDefault();
-  var card = e.target.closest('li');
-  var key = card.id;
+  e.stopPropagation();
+  var key = e.target.closest('li').id;
   var object = JSON.parse(localStorage.getItem(key));
 
-  if (e.target.classList.contains("upvote")) {
+  if (e.target.classList.contains('card-body')) {
+    //e.target.focus()
+  } else if (e.target.classList.contains("upvote")) {
     localStorage.setItem(key,JSON.stringify(updateQuality(object,1)));
   } else if (e.target.classList.contains("downvote")) {
     localStorage.setItem(key,JSON.stringify(updateQuality(object,-1)));
@@ -26,8 +27,6 @@ function handleCardEvents(e){
     keyArray.splice(index,1);
     localStorage.removeItem(key);
     localStorage.setItem('keyArray',JSON.stringify(keyArray));
-  } else if (e.target.hasAttribute('contenteditable')) {
-    
   }
   document.querySelector('#idea-space').innerHTML = '';
   getStorage();
@@ -36,11 +35,9 @@ function handleCardEvents(e){
 function getStorage(){
   if (localStorage.keyArray) {
     keyArray = JSON.parse(localStorage.getItem('keyArray'));
-    console.log(keyArray);
     //sortCards();
     keyArray.forEach(function(id){
       var card = JSON.parse(localStorage.getItem(id));
-      console.log(card)
       renderCard(card);
     });
   }
@@ -105,21 +102,18 @@ function renderCard(newCard) {
     '<li id= "'+
     newCard.id +
     '" class="idea-card">' +
-    '<h2 class="card-title" contenteditable="">' + 
+    '<h2 class="card-title" contenteditable="true">' + 
       newCard.title + 
     '</h2>' +
     '<button class="remove">' + 
-      'x' + 
     '</button>' +
-    '<p class="card-body" contenteditable="">' + 
+    '<p class="card-body" contenteditable="true">' + 
       newCard.body + 
     '</p>' +
     '<div class="vote-container">' +
       '<button class="upvote">' +
-      '&#8593;' +
       '</button>' +
       '<button class="downvote">' +
-      '&#8595;' +
       '</button>' +
       '<h5 class="card-quality">quality: ' + 
       newCard.quality + 
