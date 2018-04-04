@@ -110,6 +110,30 @@ button {
   margin:15px 0 15px 0;
 }
 
+@media screen and (max-width: 570px){
+  form {
+    width: 90%;
+  }
+
+  main {
+    width: 90%;
+  }
+
+
+}
+
+@media screen and (max-width: 350px){
+  form {
+    width: 90%;
+  }
+
+main {
+    width: 90%;
+  }
+
+}
+
+
 
 
 
