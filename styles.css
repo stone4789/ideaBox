@@ -23,7 +23,6 @@ form {
 }
 
 main {
-  main {
   width:70%;
   margin:auto;
   padding-top:15px;
@@ -59,12 +58,6 @@ span {
 hr {
   margin:10px auto 20px auto;
 }
-
-/* card styles */
-
-/*.idea-card {
-  border-bottom: 2px solid gray;
-}*/
 
 h2 {
   display:inline-block;
@@ -107,6 +100,18 @@ button {
   display: inline-block;
 }
 
+.upVote:hover {
+ background-image: url('images/upvote-hover.svg');
+}
+
+.downVote:hover {
+ background-image: url('images/downvote-hover.svg');
+}
+
+.remove {
+  background-image: url('images/delete-hover.svg');
+}
+
 .idea-card {
   margin:15px 0 15px 0;
 }
@@ -130,12 +135,3 @@ main {
     width: 90%;
   }
 }
-
-
-
-
-
-
-
-
-
