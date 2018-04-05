@@ -10,6 +10,15 @@ button {
   margin:10px auto 10px auto;
 }
 
+input {
+  font-size:16;
+  font-family: "Open Sans", sans-serif;
+}
+
+input::placeholder {
+  font-size: 16px;
+  color: #939598;
+}
 
 body {
   font-weight:400;
@@ -17,14 +26,14 @@ body {
 }
 
 form {
-  width:70%;
+  width:50%;
   margin:auto;
   padding:10px;
   padding-bottom:15px;
 }
 
 main {
-  width:70%;
+  width:50%;
   margin:auto;
   padding-top:15px;
 }
@@ -43,21 +52,17 @@ span {
   color:#00A79D;
 }
 
-#save-button {
-  background-color:#00A798;
-  color: white;
+li {
+  color: #6D6E71;
 }
 
-#save-button:hover {
-  background-color: #045E55;
-}
-
-#search-box {
-  margin: 10px 0 20px 0;
+li .card-body {
+  color: #939598;
 }
 
 hr {
   margin:10px auto 20px auto;
+  color: #D1D3D4;
 }
 
 h2 {
@@ -103,11 +108,6 @@ button {
   display: inline-block;
 }
 
-.upVote:hover {
- background-image: url('images/upvote-hover.svg');
-}
-
-<<<<<<< HEAD
 .upvote {
   background-image: url('images/upvote.svg');
 }
@@ -131,59 +131,47 @@ button {
 .remove:hover {
   background-image: url('images/delete-hover.svg');
 }
-@media screen and (max-width: 600px){
-
-   h1 {
-     font-size: 2em;
-   }
-
-  main,
-  form {
-    width:85%;
-  }
-   .body-input {
-     height: 100px;
-   }
-
-   .save-button {
-     padding-bottom: 30px;
-   }
-
-   #body {
-    height: 100px;
-   }
-}
-
-=======
-.downVote:hover {
- background-image: url('images/downvote-hover.svg');
-}
->>>>>>> 229fd4000f87bf3af7ed2844b574321ee5b0fc2b
-
-.remove {
-  background-image: url('images/delete-hover.svg');
-}
 
 .idea-card {
   margin:15px 0 15px 0;
 }
 
-@media screen and (max-width: 570px){
+#save-button,
+#sort-button {
+  background-color:#00A798;
+  color: white;
+}
+
+#save-button:hover,
+#sort-button:hover {
+  background-color: #045E55;
+}
+
+#search-box {
+  margin: 10px 0 20px 0;
+}
+
+@media screen and (max-width: 750px){
+  h1 {
+    font-size: 2em;
+  }
+   
+  main,
   form {
-    width: 90%;
+  width: 90%;
+  } 
+
+  .body-input {
+   height: 100px;
   }
 
-  main {
-    width: 90%;
+  .save-button {
+   padding-bottom: 30px;
+  }
+
+  #body {
+  height: 100px;
   }
 }
 
-@media screen and (max-width: 350px){
-  form {
-    width: 90%;
-  }
 
-main {
-    width: 90%;
-  }
-}

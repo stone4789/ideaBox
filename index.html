@@ -1,21 +1,22 @@
 <html lang="en">
 <head>
-
   <link rel="stylesheet" type="text/css" href="reset.css">
   <link href="https://fonts.googleapis.com/css?family=Roboto+Slab" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="styles.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
   <header>
     <form>
       <h1><span>idea</span>box</h1>
-      <input id="title" aria-label="title-input">
-      <input id="body" aria-label="body-input">
+      <input id="title" aria-label="title-input" placeholder="Title">
+      <input id="body" aria-label="body-input" placeholder="Body">
       <input type="submit" id="save-button" value="save" aria-label="submit-button"></button>
+      <input type="submit" id="sort-button" class="reverse" value="sort" aria-label="sort-button"></button>
     </form>
   </header>
     <main>
-      <input id="search-box">
+      <input id="search-box" placeholder="Search">
         <section>
             <ul id="idea-space"></ul>
         </section>

@@ -1,43 +1,71 @@
 var ideaInput = document.querySelector('#title');
 var bodyInput = document.querySelector('#body');
 var saveButton = document.querySelector('#save-button');
+var sortButton = document.querySelector('#sort-button');
 var searchInput = document.querySelector('#search-box');
 var ideaList = document.querySelector('#idea-space')
 var keyArray = [];
 
-saveButton.addEventListener('click',createNewCard);
 window.addEventListener('load', getStorage);
-
-document.querySelector('#idea-space').addEventListener('click',handleCardEvents);
-
+saveButton.addEventListener('click',createNewCard);
+sortButton.addEventListener('click',sortCards);
+ideaList.addEventListener('click',handleCardEvents);
+ideaList.addEventListener('keyup',updateText);
+searchInput.addEventListener('keyup',filterCards);
 
 function handleCardEvents(e){
-  e.stopPropagation();
   var key = e.target.closest('li').id;
-  var object = JSON.parse(localStorage.getItem(key));
-
-  if (e.target.classList.contains('card-body')) {
-    //e.target.focus()
-  } else if (e.target.classList.contains("upvote")) {
-    localStorage.setItem(key,JSON.stringify(updateQuality(object,1)));
+  var idea = JSON.parse(localStorage.getItem(key));
+  if (e.target.classList.contains("upvote")) {
+    store(key, updateQuality(idea, 1, key));
   } else if (e.target.classList.contains("downvote")) {
-    localStorage.setItem(key,JSON.stringify(updateQuality(object,-1)));
+    store(key, updateQuality(idea, -1, key));
   } else if (e.target.classList.contains("remove")) {
     var index = keyArray.indexOf(parseInt(key));
     keyArray.splice(index,1);
     localStorage.removeItem(key);
-    localStorage.setItem('keyArray',JSON.stringify(keyArray));
+    store('keyArray', keyArray);
+    document.getElementById(key).remove();
   }
-  document.querySelector('#idea-space').innerHTML = '';
-  getStorage();
+}
+
+function updateText(e) {
+  var key = e.target.closest('li').id;
+  var idea = JSON.parse(localStorage.getItem(key));
+  var text = e.target.innerText;
+  if (e.target.classList.contains('card-body')) {
+    idea.body = text;
+  } else if (e.target.classList.contains('card-title')) {
+    idea.title = text;
+  }
+  localStorage.setItem(key,JSON.stringify(idea));
+}
+
+function filterCards() {
+  ideaList.innerHTML = '';
+  var searchItems = searchInput.value;
+  if (searchItems) {
+    keyArray = JSON.parse(localStorage.getItem('keyArray'));
+    keyArray.forEach(function(key){
+      var rawIdea = localStorage.getItem(key);
+      if (rawIdea.includes(searchItems)) {
+        renderCard(JSON.parse(rawIdea))
+      }
+    });
+  } else {
+    getStorage();
+  }
+}
+
+function store(key, item) {
+  localStorage.setItem(key,JSON.stringify(item));
 }
 
 function getStorage(){
   if (localStorage.keyArray) {
     keyArray = JSON.parse(localStorage.getItem('keyArray'));
-    //sortCards();
-    keyArray.forEach(function(id){
-      var card = JSON.parse(localStorage.getItem(id));
+    keyArray.forEach(function(key){
+      var card = JSON.parse(localStorage.getItem(key));
       renderCard(card);
     });
   }
@@ -51,35 +79,47 @@ function Card(title,body,id) {
   this.id = id;
 }
 
-function updateQuality(obj,n) {
-  if (obj.quality === "swill" && n === 1) {
-    obj.quality = "plausible";
-    obj.numQuality = 1;
-  } else if (obj.quality === "plausible" && n === 1) {
-    obj.quality = "genius";
-    obj.numQuality = 2
-  }else if (obj.quality === "genius" && n === -1) {
-    obj.quality = "plausible";
-    obj.numQuality = 1;
-  }else if (obj.quality === "plausible" && n === -1) {
-    obj.quality = "swill";
-    obj.numQuality = 0;
+function updateQuality(idea, n, id) {
+  var cardQuality = document.getElementById(id).querySelector(".card-quality");
+  if (idea.quality === "swill" && n === 1) {
+    idea.quality = "plausible";
+    idea.numQuality = 1;
+    cardQuality.innerHTML = "quality: plausible";
+  } else if (idea.quality === "plausible" && n === 1) {
+    idea.quality = "genius";
+    idea.numQuality = 2
+    cardQuality.innerHTML = "quality: genius";
+  } else if (idea.quality === "genius" && n === -1) {
+    idea.quality = "plausible";
+    idea.numQuality = 1;
+    cardQuality.innerHTML = "quality: plausible";
+  } else if (idea.quality === "plausible" && n === -1) {
+    idea.quality = "swill";
+    idea.numQuality = 0;
+    cardQuality.innerHTML = "quality: swill";
   }
-  return obj;
+  return idea;
 }
 
-// function sortCards() {
-//   keyArray.sort(function (a,b){
-//     var obj1 = JSON.parse(localStorage.getItem(a));
-//     var obj2 = JSON.parse(localStorage.getItem(b));
-//     if (obj1.numQuality > obj2.numQuality) {
-//       return -1;
-//     } else {
-//       return 1;
-//     }
-//     localStorage.setItem(JSON.stringify(keyArray));
-//   })
-// }
+function sortCards(e) {
+  e.preventDefault();
+  keyArray.sort(function (a,b){
+    var obj1 = JSON.parse(localStorage.getItem(a));
+    var obj2 = JSON.parse(localStorage.getItem(b));
+    if (obj1.numQuality > obj2.numQuality) {
+      return 1;
+    } else {
+      return -1;
+    }
+  })
+  sortButton.classList.toggle('reverse');
+  if (sortButton.classList.contains('reverse')) {
+    keyArray.reverse();
+  }
+  store('keyArray',keyArray);
+  ideaList.innerHTML = '';
+  getStorage();
+}
 
 function createNewCard(e) {
   e.preventDefault();
@@ -95,45 +135,30 @@ function createNewCard(e) {
   renderCard(cardObject);
 }
 
-function renderCard(newCard) {
-
+function renderCard(idea) {
   var card = document.createElement('li');
+  card.id = idea.id;
+  card.className = 'idea-card';
   card.innerHTML = 
-    '<li id= "n' +
-    newCard.idNumber +
-    '" class="idea-card">' +
-<<<<<<< HEAD
     '<h2 class="card-title" contenteditable="true">' + 
-=======
-    '<h2 class="card-title">' + 
->>>>>>> 229fd4000f87bf3af7ed2844b574321ee5b0fc2b
-      newCard.title + 
+      idea.title + 
     '</h2>' +
     '<button class="remove">' + 
     '</button>' +
-<<<<<<< HEAD
     '<p class="card-body" contenteditable="true">' + 
-      newCard.body + 
+      idea.body + 
     '</p>' +
     '<div class="vote-container">' +
       '<button class="upvote">' +
       '</button>' +
       '<button class="downvote">' +
-=======
-    '<p class="card-body">' + 
-      newCard.body + 
-    '</p>' +
-    '<div class="vote-container">' +
-      '<input class="upVote" type="image" src="images/downvote.svg">' +
-      '<input class="downVote" type="image" src="images/upvote.svg">' +
->>>>>>> 229fd4000f87bf3af7ed2844b574321ee5b0fc2b
       '</button>' +
       '<h5 class="card-quality">quality: ' + 
-      newCard.quality + 
+      idea.quality + 
       '</h5>' +
     '</div>' +
     '<hr>' +
-    '</li>'};
+    '</li>';
 
   ideaList.insertBefore(card,ideaList.firstChild);
   document.querySelector('form').reset();
